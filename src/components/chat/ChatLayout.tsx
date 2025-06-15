@@ -4,58 +4,28 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Send } from 'lucide-react';
 import { ChatMessage, Message } from './ChatMessage';
-import { ApiKeyDialog } from './ApiKeyDialog';
 import { useToast } from "@/hooks/use-toast";
 
-const RAPID_API_KEY_STORAGE = 'rapidApiKey';
+// NOTE: The API key is hardcoded here for your convenience to get started.
+// In a real-world application, you should use a more secure method to handle API keys.
+const API_KEY = '16bdfcfe49msh0788eebea784213p156e1ajsnbb09b53501d7';
 
 export function ChatLayout() {
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: "Hello! How can I help you today?" }
+    { role: 'assistant', content: "Hello! I'm ready to chat. How can I help you today?" }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [apiKey, setApiKey] = useState<string | null>(null);
-  const [isApiKeyDialogOpen, setIsApiKeyDialogOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const { toast } = useToast();
-
-  useEffect(() => {
-    const storedApiKey = localStorage.getItem(RAPID_API_KEY_STORAGE);
-    if (storedApiKey) {
-      setApiKey(storedApiKey);
-    } else {
-      setIsApiKeyDialogOpen(true);
-    }
-  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
 
-  const handleApiKeySubmit = (newApiKey: string) => {
-    setApiKey(newApiKey);
-    localStorage.setItem(RAPID_API_KEY_STORAGE, newApiKey);
-    setIsApiKeyDialogOpen(false);
-    toast({
-      title: "API Key Saved",
-      description: "Your RapidAPI key has been securely saved.",
-    });
-  };
-
   const handleSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!input.trim() || isLoading) return;
-
-    if (!apiKey) {
-      setIsApiKeyDialogOpen(true);
-      toast({
-        title: "API Key Required",
-        description: "Please enter your RapidAPI key to start chatting.",
-        variant: "destructive",
-      });
-      return;
-    }
+    if (!input.trim() || isLoading || !API_KEY) return;
 
     const newUserMessage: Message = { role: 'user', content: input };
     setMessages((prev) => [...prev, newUserMessage]);
@@ -66,7 +36,7 @@ export function ChatLayout() {
       const response = await fetch('https://unlimited-gpt-4.p.rapidapi.com/chat/completions', {
         method: 'POST',
         headers: {
-          'X-Rapidapi-Key': apiKey,
+          'X-Rapidapi-Key': API_KEY,
           'X-Rapidapi-Host': 'unlimited-gpt-4.p.rapidapi.com',
           'Content-Type': 'application/json',
         },
@@ -105,9 +75,6 @@ export function ChatLayout() {
           <h1 className="text-xl font-bold">AI Chatbot</h1>
           <p className="text-sm text-muted-foreground">Powered by RapidAPI</p>
         </div>
-        <Button variant="outline" size="sm" onClick={() => setIsApiKeyDialogOpen(true)}>
-          Update API Key
-        </Button>
       </header>
       
       <main className="flex-1 overflow-y-auto p-6 space-y-4">
@@ -124,19 +91,13 @@ export function ChatLayout() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Type your message..."
-            disabled={isLoading}
+            disabled={isLoading || !API_KEY}
           />
-          <Button type="submit" disabled={isLoading || !input.trim()}>
+          <Button type="submit" disabled={isLoading || !input.trim() || !API_KEY}>
             <Send className="h-4 w-4" />
           </Button>
         </form>
       </footer>
-
-      <ApiKeyDialog
-        open={isApiKeyDialogOpen}
-        onOpenChange={setIsApiKeyDialogOpen}
-        onApiKeySubmit={handleApiKeySubmit}
-      />
     </div>
   );
 }
