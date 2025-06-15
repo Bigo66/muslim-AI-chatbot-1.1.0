@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,10 +13,10 @@ import {
 } from "@/components/ui/select";
 import { ThemeToggle } from '../ThemeToggle';
 
-// PICKED MOSQUE IMAGE (from placeholder_images context or use a royalty-free image)
+// Updated mosque image to use user-uploaded image
 // This is a good vertical mosque image for a soft background.
 // You can replace this with your own image if desired.
-const MOSQUE_IMG = "https://images.unsplash.com/photo-1492321936769-b49830bc1d1e?auto=format&fit=crop&w=1200&q=80"; // night mosque
+const MOSQUE_IMG = "/lovable-uploads/62b39047-2aed-4c07-851f-89e06a73d051.png"; // user-uploaded image
 
 // NOTE: The API key is hardcoded here for your convenience to get started.
 // In a real-world application, you should use a more secure method to handle API keys.
