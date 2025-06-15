@@ -94,7 +94,7 @@ export function ChatLayout() {
         <img
           src={MOSQUE_IMG}
           alt="Mosque"
-          className="w-full h-full object-cover object-bottom brightness-90 dark:brightness-60 blur-sm transition-all duration-500"
+          className="w-full h-full object-cover object-bottom brightness-90 dark:brightness-60 transition-all duration-500"
           style={{ minHeight: '100%', minWidth: '100%' }}
         />
         {/* Overlay for readability */}
