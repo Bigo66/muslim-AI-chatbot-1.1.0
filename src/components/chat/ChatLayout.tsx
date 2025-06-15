@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -33,27 +32,17 @@ export function ChatLayout() {
     setIsLoading(true);
 
     try {
-      const systemMessage = {
-        role: 'system',
-        content: 'You are an AI Muslim chatbot. Your purpose is to provide information and answer questions based on Islamic teachings from the Quran and the Sunnah. Always be respectful, knowledgeable, and cite sources when possible. If a question is outside the scope of Islamic knowledge, state that you are specialized in that area.'
-      };
-      
-      const apiMessages = [
-        systemMessage,
-        ...messages,
-        newUserMessage
-      ];
-
-      const response = await fetch('https://unlimited-gpt-4.p.rapidapi.com/chat/completions', {
+      const response = await fetch('https://ai-islamic-chatbot-quran-hadith-fiqh-fatwa-halal-q-a.p.rapidapi.com/chat?noqueue=1', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${API_KEY}`,
-          'X-Rapidapi-Host': 'unlimited-gpt-4.p.rapidapi.com',
+          'X-Rapidapi-Key': API_KEY,
+          'X-Rapidapi-Host': 'ai-islamic-chatbot-quran-hadith-fiqh-fatwa-halal-q-a.p.rapidapi.com',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'gpt-4o-2024-05-13',
-          messages: apiMessages.map(({ role, content }) => ({ role, content })),
+          message: newUserMessage.content,
+          category: 'hadith',
+          language: 'en'
         }),
       });
 
@@ -63,7 +52,7 @@ export function ChatLayout() {
       }
 
       const data = await response.json();
-      const aiResponse = data.choices[0].message;
+      const aiResponse: Message = { role: 'assistant', content: data.response };
       setMessages((prev) => [...prev, aiResponse]);
 
     } catch (error) {
