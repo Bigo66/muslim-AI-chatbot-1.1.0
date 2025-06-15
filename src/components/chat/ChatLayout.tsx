@@ -36,7 +36,7 @@ export function ChatLayout() {
       const response = await fetch('https://unlimited-gpt-4.p.rapidapi.com/chat/completions', {
         method: 'POST',
         headers: {
-          'X-Rapidapi-Key': API_KEY,
+          'Authorization': `Bearer ${API_KEY}`,
           'X-Rapidapi-Host': 'unlimited-gpt-4.p.rapidapi.com',
           'Content-Type': 'application/json',
         },
