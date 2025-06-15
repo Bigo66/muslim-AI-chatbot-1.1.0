@@ -1,7 +1,7 @@
 
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Bot, User } from 'lucide-react';
+import { Moon, User } from 'lucide-react';
 import { BeatLoader } from 'react-spinners';
 
 export type Message = {
@@ -17,7 +17,7 @@ export function ChatMessage({ message, isLoading }: { message: Message; isLoadin
       {!isUser && (
         <Avatar className="h-8 w-8 bg-muted flex items-center justify-center">
           <AvatarFallback>
-            <Bot className="h-5 w-5" />
+            <Moon className="h-5 w-5" />
           </AvatarFallback>
         </Avatar>
       )}

@@ -12,7 +12,7 @@ const API_KEY = '16bdfcfe49msh0788eebea784213p156e1ajsnbb09b53501d7';
 
 export function ChatLayout() {
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: "Hello! I'm ready to chat. How can I help you today?" }
+    { role: 'assistant', content: "As-salamu alaykum! I am your AI Muslim assistant. How can I help you today?" }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -33,6 +33,17 @@ export function ChatLayout() {
     setIsLoading(true);
 
     try {
+      const systemMessage = {
+        role: 'system',
+        content: 'You are an AI Muslim chatbot. Your purpose is to provide information and answer questions based on Islamic teachings from the Quran and the Sunnah. Always be respectful, knowledgeable, and cite sources when possible. If a question is outside the scope of Islamic knowledge, state that you are specialized in that area.'
+      };
+      
+      const apiMessages = [
+        systemMessage,
+        ...messages,
+        newUserMessage
+      ];
+
       const response = await fetch('https://unlimited-gpt-4.p.rapidapi.com/chat/completions', {
         method: 'POST',
         headers: {
@@ -42,7 +53,7 @@ export function ChatLayout() {
         },
         body: JSON.stringify({
           model: 'gpt-4o-2024-05-13',
-          messages: [...messages, newUserMessage].map(({ role, content }) => ({ role, content })),
+          messages: apiMessages.map(({ role, content }) => ({ role, content })),
         }),
       });
 
@@ -72,8 +83,8 @@ export function ChatLayout() {
     <div className="flex flex-col h-screen w-full bg-background">
       <header className="p-4 border-b flex justify-between items-center bg-card">
         <div>
-          <h1 className="text-xl font-bold">AI Chatbot</h1>
-          <p className="text-sm text-muted-foreground">Powered by RapidAPI</p>
+          <h1 className="text-xl font-bold">AI Muslim Chatbot</h1>
+          <p className="text-sm text-muted-foreground">Your guide to Islamic knowledge</p>
         </div>
       </header>
       
