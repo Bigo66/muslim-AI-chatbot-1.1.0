@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ThemeToggle } from '../ThemeToggle';
 
 // NOTE: The API key is hardcoded here for your convenience to get started.
 // In a real-world application, you should use a more secure method to handle API keys.
@@ -85,6 +86,7 @@ export function ChatLayout() {
           <h1 className="text-xl font-bold">AI Muslim Chatbot</h1>
           <p className="text-sm text-muted-foreground">Your guide to Islamic knowledge</p>
         </div>
+        <ThemeToggle />
       </header>
       
       <main className="flex-1 overflow-y-auto p-6 space-y-4">
