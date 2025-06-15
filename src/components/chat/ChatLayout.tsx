@@ -1,9 +1,17 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Send } from 'lucide-react';
 import { ChatMessage, Message } from './ChatMessage';
 import { useToast } from "@/hooks/use-toast";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 // NOTE: The API key is hardcoded here for your convenience to get started.
 // In a real-world application, you should use a more secure method to handle API keys.
@@ -15,6 +23,7 @@ export function ChatLayout() {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [category, setCategory] = useState('hadith');
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const { toast } = useToast();
 
@@ -41,7 +50,7 @@ export function ChatLayout() {
         },
         body: JSON.stringify({
           message: newUserMessage.content,
-          category: 'hadith',
+          category: category,
           language: 'en'
         }),
       });
@@ -52,7 +61,8 @@ export function ChatLayout() {
       }
 
       const data = await response.json();
-      const aiResponse: Message = { role: 'assistant', content: data.response };
+      const responseContent = data.result?.response?.message || "Sorry, I couldn't get a proper response from the assistant.";
+      const aiResponse: Message = { role: 'assistant', content: responseContent };
       setMessages((prev) => [...prev, aiResponse]);
 
     } catch (error) {
@@ -87,6 +97,18 @@ export function ChatLayout() {
 
       <footer className="p-4 border-t bg-card">
         <form onSubmit={handleSendMessage} className="flex gap-2">
+          <Select value={category} onValueChange={setCategory} disabled={isLoading}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select a category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="hadith">Hadith</SelectItem>
+              <SelectItem value="quran">Quran</SelectItem>
+              <SelectItem value="fiqh">Fiqh</SelectItem>
+              <SelectItem value="fatwa">Fatwa</SelectItem>
+              <SelectItem value="halal-haram">Halal/Haram</SelectItem>
+            </SelectContent>
+          </Select>
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
